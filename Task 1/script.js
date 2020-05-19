@@ -15,5 +15,3 @@ exp = prompt("Введите обязательную статью расход�
 cost = prompt("Во сколько обойдется?", "");
 appData.expenses[exp] = cost;
 alert("Бюджет за 1 день:" + appData.budget / 30);
-console.log(appData.expenses);
-console.log(appData.timeData);
