@@ -14,6 +14,10 @@ let buttonStart = document.getElementById('start'),
     day = document.querySelector('body > div > div.main > div.result > div.time-data > div.day > input'),
     money, time;
 
+approveButton1.disabled = true;
+approveButton2.disabled = true;
+calculateButton.disabled = true;
+
 buttonStart.addEventListener('click', function(){
     time = prompt("Введите дату в формате YYYY-MM-DD", "");
     money = +prompt("Ваш бюджет в месяц?", "");
@@ -27,6 +31,9 @@ buttonStart.addEventListener('click', function(){
     year.value = new Date(Date.parse(time)).getFullYear();
     month.value = new Date(Date.parse(time)).getMonth() + 1;
     day.value = new Date(Date.parse(time)).getDate();
+    approveButton1.disabled = false;
+    approveButton2.disabled = false;
+    calculateButton.disabled = false;
 });
 
 approveButton1.addEventListener('click', function() {
@@ -60,13 +67,14 @@ approveButton2.addEventListener('click', function() {
 })
 
 calculateButton.addEventListener('click', function () {
+
     if (appData.budget != undefined) {
-        appData.moneyPerDay = (appData.budget / 30).toFixed();
+        appData.moneyPerDay = ((appData.budget - values[3].textContent) / 30).toFixed();
         values[1].textContent += appData.moneyPerDay;
 
         if (appData.moneyPerDay < 100) {
             values[2].textContent = 'Минимальный уровень достатка';
-        } else if (appData.moneyPerDay > 100 && appData.moneyPerDay < 2000) {
+        } else if (appData.moneyPerDay >= 100 && appData.moneyPerDay <= 2000) {
             values[2].textContent = 'Средний уровень достатка';
         } else if (appData.moneyPerDay > 2000) {
             values[2].textContent = 'Высокий уровень достатка';
