@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     // Timer
 
-    let deadline = '2020-05-30';
+    let deadline = '2020-05-31';
 
     function getTimeRemaining(endTime) {
         let t = Date.parse(endTime) - Date.parse(new Date()),
@@ -71,6 +71,9 @@ window.addEventListener('DOMContentLoaded', function(){
 
             if (t.total <= 0) {
                 clearInterval(timeInterval);
+                hours.textContent = '00';
+                minutes.textContent = '00';
+                seconds.textContent = '00';
             }
         }
     }
