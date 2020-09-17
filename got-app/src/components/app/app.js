@@ -1,52 +1,58 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
+import CharacterPage from "../characterPage";
+import ErrorMessage from "../errorMessage";
 
-let showRandomChar = true;
-
-const App = () => {
-    const onToggleRandomCharView = () => {
-        //const randomChar = document.getElementById('random-char-container');
-        const randomCharButton = document.getElementById('random-char-button');
-        if (showRandomChar) {
-            showRandomChar = false;
-            randomCharButton.innerText = 'Show Random Character';
-        } else {
-            showRandomChar = true;
-            randomCharButton.innerText = 'Hide Random Character';
-        }
+export default class App extends Component {
+    state = {
+        showRandomChar: true,
+        buttonTitle: 'Hide Random Character',
+        error: false
     }
 
-    return (
-        <> 
-            <Container>
-                <Header />
-            </Container>
-            <Container>
-                <Row>
-                    <Col id='random-char-container' lg={{size: 5, offset: 0}}>
-                       <RandomChar/>
-                    </Col>
-                </Row>
-                <button
-                    id="random-char-button"
-                    type="button"
-                    className="mb-4 btn btn-dark"
-                    onClick={onToggleRandomCharView}>Hide Random Character</button>
-                <Row>
-                    <Col md='6'>
-                        <ItemList />
-                    </Col>
-                    <Col md='6'>
-                        <CharDetails />
-                    </Col>
-                </Row>
-            </Container>
-        </>
-    );
-};
+    componentDidCatch() {
+        this.setState({
+            error: true
+        })
+    }
 
-export default App;
+    onToggleRandomCharView = () => {
+     this.setState((state) => {
+         return {
+             showRandomChar: !state.showRandomChar,
+             buttonTitle: state.showRandomChar ? 'Show Random Character' : 'Hide Random Character'
+         }
+     })
+    }
+
+    render() {
+
+        if (this.state.error) {
+            return <ErrorMessage/>
+        }
+
+        return (
+            <>
+                <Container>
+                    <Header/>
+                </Container>
+                <Container>
+                    <Row>
+                        <Col lg={{size: 5, offset: 0}}>
+                            {this.state.showRandomChar ? <RandomChar/> : null}
+                        </Col>
+                    </Row>
+                    <button
+                        id="random-char-button"
+                        type="button"
+                        className="mb-5 btn btn-dark"
+                        onClick={this.onToggleRandomCharView}>{this.state.buttonTitle}
+                    </button>
+                    <CharacterPage/>
+                </Container>
+            </>
+        );
+    }
+};
