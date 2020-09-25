@@ -1,3 +1,5 @@
+import ItemDetails, {Field} from "../components/itemDetails";
+import React from "react";
 
 export default class GotService {
     constructor() {
@@ -14,34 +16,39 @@ export default class GotService {
         return await res.json();
     }
 
-    getAllBooks() {
-        return this.getResource(`/books/`);
+    getAllBooks = async () => {
+        const res = await this.getResource(`/books/`);
+        return res.map(this._transformBook);
     }
     
-    getBook(id) {
-        return this.getResource(`/books/${id}/`);
+    getBook = async (id) => {
+        const book = await this.getResource(`/books/${id}/`);
+        return this._transformBook(book);
     }
     
-    async getAllCharacters() {
+    getAllCharacters = async () => {
         const res = await this.getResource(`/characters?page=5&pageSize=10`);
         return res.map(this._transformCharacter);
     }
     
-    async getCharacter (id) {
+    getCharacter = async (id) => {
         const character = await this.getResource(`/characters/${id}`);
         return this._transformCharacter(character);
     }
     
-    getAllHouses() {
-        return this.getResource(`/houses/`);
+    getAllHouses = async () =>  {
+        const res = await this.getResource(`/houses/`);
+        return res.map(this._transformHouse);
     }
     
-    getHouse(id) {
-        return this.getResource(`/houses/${id}/`);
+    getHouse = async (id) =>  {
+        const house = await this.getResource(`/houses/${id}/`);
+        return this._transformHouse(house);
     }
 
-    _transformCharacter(char) {
+    _transformCharacter = (char) => {
         return {
+            id: this._extractId(char),
             name: char.name ? char.name : 'unknown',
             gender: char.gender ? char.gender : 'unknown',
             born: char.born ? char.born : 'unknown',
@@ -50,8 +57,9 @@ export default class GotService {
         }
     }
 
-    _transformHouse(house) {
+    _transformHouse = (house) => {
         return {
+            id: this._extractId(house),
             name: house.name ? house.name : 'unknown',
             region: house.region ? house.region : 'unknown',
             words: house.words ? house.words : 'unknown',
@@ -61,12 +69,20 @@ export default class GotService {
         }
     }
 
-    _transformBook(book) {
+    _transformBook = (book) => {
         return {
+            id: this._extractId(book),
             name: book.name ? book.name : 'unknown',
             numberOfPages: book.numberOfPages ? book.numberOfPages : 'unknown',
             publisher: book.publisher ? book.publisher : 'unknown',
             released: book.released ? book.released : 'unknown'
         }
     }
+
+    _extractId = (item) => {
+        const idRegExp = /\/([0-9]*)$/;
+        return item.url.match(idRegExp)[1];
+    }
 }
+
+
